@@ -37,7 +37,7 @@ public class MeetingServiceImpl implements MeetingService {
     public void createMeeting(CreateMeetingDto meetingDto) {
         String userId= AuthUtil.getUserId();
 
-        if(!teamService.isMemberOfTeam(userId, meetingDto.getChannelId()))
+        if(!teamService.isMemberOfTeam(userId, meetingDto.getTeamId(),meetingDto.getChannelId()))
             throw new AccessDeniedException("You don't have the permission to add meeting to this channel");
 
         Meeting meeting= modelMapper.map(meetingDto, Meeting.class);
