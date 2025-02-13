@@ -35,7 +35,7 @@ public class MeetingController {
     @PostMapping("/reaction/{meetingId}")
     public ResponseEntity<Void> reactMeeting(
             @PathVariable("meetingId") String meetingId,
-            @RequestParam("emojiCode") String emojiCode){
+            @RequestParam(value = "emojiCode", required = false) String emojiCode){
         meetingService.reactMeeting(meetingId, emojiCode);
         return ResponseEntity.ok().build();
     }

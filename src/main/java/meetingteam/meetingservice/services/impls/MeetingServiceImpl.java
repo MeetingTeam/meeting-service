@@ -3,11 +3,9 @@ package meetingteam.meetingservice.services.impls;
 import lombok.RequiredArgsConstructor;
 import meetingteam.commonlibrary.exceptions.BadRequestException;
 import meetingteam.commonlibrary.utils.AuthUtil;
-import meetingteam.commonlibrary.utils.DateTimeUtil;
 import meetingteam.commonlibrary.utils.PageUtil;
-import meetingteam.meetingservice.constraints.WebsocketTopics;
 import meetingteam.meetingservice.dtos.Meeting.CreateMeetingDto;
-import meetingteam.meetingservice.dtos.Meeting.EventMeetingDto;
+import meetingteam.meetingservice.dtos.Meeting.DeleteMeetingDto;
 import meetingteam.meetingservice.dtos.Meeting.ResMeetingDto;
 import meetingteam.meetingservice.dtos.Meeting.UpdateMeetingDto;
 import meetingteam.meetingservice.models.Meeting;
@@ -30,7 +28,7 @@ import java.util.*;
 public class MeetingServiceImpl implements MeetingService {
     private final MeetingRepository meetingRepo;
     private final TeamService teamService;
-    private final RabbitmqService rabbitmqService;
+    private final WebsocketService websocketService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -45,12 +43,13 @@ public class MeetingServiceImpl implements MeetingService {
             if(meeting.getStartDate()==null) meeting.setStartDate(LocalDate.now());
         }
         meeting.setCreatorId(userId);
+        meeting.setCalendarUserIds(new HashSet());
         meeting.setIsCanceled(false);
         meeting.setCreatedAt(LocalDateTime.now());
         var savedMeeting=meetingRepo.save(meeting);
 
         var resMeetingDto= modelMapper.map(savedMeeting, ResMeetingDto.class);
-        rabbitmqService.sendToTeam(savedMeeting.getTeamId(), WebsocketTopics.AddOrUpdateMeeting, resMeetingDto);
+        websocketService.addOrUpdateMeeting(savedMeeting.getTeamId(), resMeetingDto);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class MeetingServiceImpl implements MeetingService {
         meetingRepo.save(meeting);
 
         var resMeetingDto= modelMapper.map(meeting, ResMeetingDto.class);
-        rabbitmqService.sendToTeam(meeting.getTeamId(), WebsocketTopics.AddOrUpdateMeeting, resMeetingDto);
+        websocketService.addOrUpdateMeeting(meeting.getTeamId(), resMeetingDto);
     }
 
     @Override
@@ -91,7 +90,7 @@ public class MeetingServiceImpl implements MeetingService {
         meetingRepo.save(meeting);
 
         var resMeetingDto= modelMapper.map(meeting, ResMeetingDto.class);
-        rabbitmqService.sendToTeam(meeting.getTeamId(), WebsocketTopics.AddOrUpdateMeeting, resMeetingDto);
+        websocketService.addOrUpdateMeeting(meeting.getTeamId(), resMeetingDto);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class MeetingServiceImpl implements MeetingService {
         meetingRepo.save(meeting);
 
         var resMeetingDto= modelMapper.map(meeting, ResMeetingDto.class);
-        rabbitmqService.sendToTeam(meeting.getTeamId(), WebsocketTopics.AddOrUpdateMeeting, resMeetingDto);
+        websocketService.addOrUpdateMeeting(meeting.getTeamId(), resMeetingDto);
     }
 
     @Override
@@ -119,11 +118,8 @@ public class MeetingServiceImpl implements MeetingService {
 
         meetingRepo.deleteById(meetingId);
 
-        Map<String, String> map=new HashMap();
-        map.put("teamId", meeting.getTeamId());
-        map.put("channelId", meeting.getChannelId());
-        map.put("meetingId",meetingId);
-        rabbitmqService.sendToTeam(meeting.getTeamId(),WebsocketTopics.DeleteMeeting, map);
+        websocketService.deleteMeeting(meeting.getTeamId(), 
+                new DeleteMeetingDto(meeting.getChannelId(), meetingId));
     }
 
     @Override

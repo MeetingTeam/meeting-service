@@ -8,6 +8,9 @@ import meetingteam.meetingservice.dtos.Calendar.CalendarDto;
 import meetingteam.meetingservice.dtos.Meeting.ResMeetingDto;
 import meetingteam.meetingservice.repositories.MeetingRepository;
 import meetingteam.meetingservice.services.CalendarService;
+
+import java.util.HashSet;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ public class CalendarServiceImpl implements CalendarService {
         String userId= AuthUtil.getUserId();
         var meeting=meetingRepo.findById(meetingId).orElseThrow(()->new BadRequestException("Meeting not found"));
 
+        if(meeting.getCalendarUserIds()==null) meeting.setCalendarUserIds(new HashSet());
         if(isAdded) meeting.getCalendarUserIds().add(userId);
         else meeting.getCalendarUserIds().remove(userId);
         meetingRepo.save(meeting);

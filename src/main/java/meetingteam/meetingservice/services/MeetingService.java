@@ -3,9 +3,6 @@ package meetingteam.meetingservice.services;
 import meetingteam.meetingservice.dtos.Meeting.CreateMeetingDto;
 import meetingteam.meetingservice.dtos.Meeting.ResMeetingDto;
 import meetingteam.meetingservice.dtos.Meeting.UpdateMeetingDto;
-import meetingteam.meetingservice.models.Reaction;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface MeetingService {

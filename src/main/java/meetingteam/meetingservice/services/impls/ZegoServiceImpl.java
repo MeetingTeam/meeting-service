@@ -31,7 +31,7 @@ public class ZegoServiceImpl implements ZegoService {
         if(meeting.getIsCanceled()!=null && meeting.getIsCanceled())
             throw new BadRequestException("This meeting has been closed");
 
-        if(!teamService.isMemberOfTeam(userId, meeting.getChannelId()))
+        if(!teamService.isMemberOfTeam(userId, meeting.getTeamId(), null))
             throw new AccessDeniedException("You do not have permission to get token from this meeting");
 
         String token= generateToken(userId, meetingId);
