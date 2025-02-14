@@ -6,7 +6,7 @@ import meetingteam.meetingservice.dtos.Meeting.UpdateMeetingDto;
 import java.util.List;
 
 public interface MeetingService {
-    void createMeeting(CreateMeetingDto meetingDto);
+    ResMeetingDto createMeeting(CreateMeetingDto meetingDto);
     void updateMeeting(UpdateMeetingDto meetingDto);
     void reactMeeting(String meetingId, String emojiCode);
     void cancelMeeting(String meetingId, boolean isCanceled);

@@ -32,7 +32,7 @@ public class MeetingServiceImpl implements MeetingService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void createMeeting(CreateMeetingDto meetingDto) {
+    public ResMeetingDto createMeeting(CreateMeetingDto meetingDto) {
         String userId= AuthUtil.getUserId();
 
         if(!teamService.isMemberOfTeam(userId, meetingDto.getTeamId(),meetingDto.getChannelId()))
@@ -50,6 +50,7 @@ public class MeetingServiceImpl implements MeetingService {
 
         var resMeetingDto= modelMapper.map(savedMeeting, ResMeetingDto.class);
         websocketService.addOrUpdateMeeting(savedMeeting.getTeamId(), resMeetingDto);
+        return resMeetingDto;
     }
 
     @Override

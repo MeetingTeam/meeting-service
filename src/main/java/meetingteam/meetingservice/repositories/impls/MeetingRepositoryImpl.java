@@ -75,4 +75,11 @@ public class MeetingRepositoryImpl implements MeetingRepository {
                 .addCriteria(Criteria.where("channelId").is(channelId));
         mongoTemplate.remove(query, Meeting.class);
     }
+
+    @Override
+    public void deleteByTeamId(String teamId) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("teamId").is(teamId));
+        mongoTemplate.remove(query, Meeting.class);
+    }
 }
