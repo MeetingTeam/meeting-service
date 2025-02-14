@@ -12,4 +12,5 @@ public interface MeetingRepository extends BaseRepository<Meeting, String> {
     List<Meeting> getByIds(Set<String> meetingIds);
     List<Meeting> getCalendarMeetings(String userId);
     void deleteByChannelId(String channelId);
+    void deleteByTeamId(String teamId);
 }

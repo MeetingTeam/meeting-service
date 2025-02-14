@@ -128,6 +128,11 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
+    public void deleteMeetingsByTeamId(String teamId) {
+            meetingRepo.deleteByTeamId(teamId);
+    }
+
+    @Override
     public List<ResMeetingDto> getVideoChannelMeetings(String channelId, Integer receivedMeetingNum) {
         int pageSize= PageUtil.findBestPageSize(receivedMeetingNum);
         var meetings= meetingRepo.getMeetingsByChannelId(channelId, PageRequest.of(receivedMeetingNum/pageSize, pageSize));

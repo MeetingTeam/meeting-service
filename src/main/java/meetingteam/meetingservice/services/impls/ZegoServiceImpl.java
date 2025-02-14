@@ -6,6 +6,7 @@ import meetingteam.commonlibrary.utils.AuthUtil;
 import meetingteam.meetingservice.dtos.zegocloud.ZegoTokenDto;
 import meetingteam.meetingservice.repositories.MeetingRepository;
 import meetingteam.meetingservice.services.TeamService;
+import meetingteam.meetingservice.services.UserService;
 import meetingteam.meetingservice.services.ZegoService;
 import meetingteam.meetingservice.utils.TokenServerAssistant;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class ZegoServiceImpl implements ZegoService {
     private final MeetingRepository meetingRepo;
     private final TeamService teamService;
+    private final UserService userService;
 
     @Value("${zegocloud.app-id}")
     private long zegoAppId;
@@ -35,7 +37,8 @@ public class ZegoServiceImpl implements ZegoService {
             throw new AccessDeniedException("You do not have permission to get token from this meeting");
 
         String token= generateToken(userId, meetingId);
-        return new ZegoTokenDto(zegoAppId, token);
+        var user= userService.getUserInfo();
+        return new ZegoTokenDto(zegoAppId, token, user);
     }
 
     private String generateToken(String userId, String roomId) {

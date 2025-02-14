@@ -27,7 +27,7 @@ public class MeetingRepositoryImpl implements MeetingRepository {
     @Override
     public Optional<Meeting> findById(String id) {
         var meeting = mongoTemplate.findById(id, Meeting.class);
-        return Optional.ofNullable(mongoTemplate.findById(id, Meeting.class));
+        return Optional.ofNullable(meeting);
     }
 
     @Override

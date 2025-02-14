@@ -30,17 +30,4 @@ public class TeamServiceImpl implements TeamService {
                 .retrieve()
                 .body(Boolean.class);
     }
-
-    public boolean requestToJoinTeam(String teamId){
-        String jwtToken= AuthUtil.getJwtToken();
-        URI uri= UriComponentsBuilder.fromHttpUrl(serviceUrlConfig.teamServiceUrl())
-                .path("/team/private/joined/"+teamId)
-                .build().toUri();
-
-        return restClient.post()
-                .uri(uri)
-                .headers(h->h.setBearerAuth(jwtToken))
-                .retrieve()
-                .body(Boolean.class);
-    }
 }

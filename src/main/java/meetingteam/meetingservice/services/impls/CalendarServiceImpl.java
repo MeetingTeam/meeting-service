@@ -24,6 +24,10 @@ public class CalendarServiceImpl implements CalendarService {
     public void addToCalendar(String meetingId, boolean isAdded) {
         String userId= AuthUtil.getUserId();
         var meeting=meetingRepo.findById(meetingId).orElseThrow(()->new BadRequestException("Meeting not found"));
+        if(meeting.getIsCanceled())
+            throw new BadRequestException("Unable to stick this meeting to your calendar as it is canceled");
+        if(meeting.getStartDate()==null)
+            throw new BadRequestException("Unable to stick this meeting to your calendar as it has no time scheduling");
 
         if(meeting.getCalendarUserIds()==null) meeting.setCalendarUserIds(new HashSet());
         if(isAdded) meeting.getCalendarUserIds().add(userId);
@@ -43,7 +47,7 @@ public class CalendarServiceImpl implements CalendarService {
             }
             else{
                 if(m.getStartDate().isAfter(weekRange.get(1))) return false;
-                else if(m.getEndDate()!=null && !m.getEndDate().isBefore(weekRange.get(0)))
+                else if(m.getEndDate()!=null && m.getEndDate().isBefore(weekRange.get(0)))
                     return false;
                 return true;
             }

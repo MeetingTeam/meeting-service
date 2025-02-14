@@ -12,5 +12,6 @@ public interface MeetingService {
     void cancelMeeting(String meetingId, boolean isCanceled);
     void deleteMeeting(String meetingId);
     void deleteMeetingsByChannelId(String channelId);
+    void deleteMeetingsByTeamId(String teamId);
     List<ResMeetingDto> getVideoChannelMeetings(String channelId, Integer receivedMeetingNum);
 }
