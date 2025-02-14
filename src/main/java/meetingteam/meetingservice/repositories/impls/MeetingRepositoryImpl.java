@@ -27,7 +27,7 @@ public class MeetingRepositoryImpl implements MeetingRepository {
     @Override
     public Optional<Meeting> findById(String id) {
         var meeting = mongoTemplate.findById(id, Meeting.class);
-        return Optional.ofNullable(mongoTemplate.findById(id, Meeting.class));
+        return Optional.ofNullable(meeting);
     }
 
     @Override
@@ -73,6 +73,13 @@ public class MeetingRepositoryImpl implements MeetingRepository {
     public void deleteByChannelId(String channelId) {
         Query query = new Query()
                 .addCriteria(Criteria.where("channelId").is(channelId));
+        mongoTemplate.remove(query, Meeting.class);
+    }
+
+    @Override
+    public void deleteByTeamId(String teamId) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("teamId").is(teamId));
         mongoTemplate.remove(query, Meeting.class);
     }
 }

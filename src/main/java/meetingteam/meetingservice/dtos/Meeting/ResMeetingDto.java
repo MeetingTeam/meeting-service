@@ -31,8 +31,6 @@ public class ResMeetingDto {
 
     private Set<Integer> scheduledDaysOfWeek;
 
-    private Set<String> notificationEmails;
-
     private Set<String> calendarUserIds;
 
     private List<Reaction> reactions;

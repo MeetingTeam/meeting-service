@@ -19,10 +19,9 @@ public class MeetingController {
     private final MeetingService meetingService;
 
     @PostMapping
-    public ResponseEntity<Void> createMeeting(
+    public ResponseEntity<ResMeetingDto> createMeeting(
             @RequestBody @Valid CreateMeetingDto meetingDto){
-        meetingService.createMeeting(meetingDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(meetingService.createMeeting(meetingDto));
     }
 
     @PatchMapping
@@ -35,7 +34,7 @@ public class MeetingController {
     @PostMapping("/reaction/{meetingId}")
     public ResponseEntity<Void> reactMeeting(
             @PathVariable("meetingId") String meetingId,
-            @RequestParam("emojiCode") String emojiCode){
+            @RequestParam(value = "emojiCode", required = false) String emojiCode){
         meetingService.reactMeeting(meetingId, emojiCode);
         return ResponseEntity.ok().build();
     }
@@ -67,6 +66,14 @@ public class MeetingController {
     public ResponseEntity<Void> deleteByChannelId(
             @PathVariable("channelId") String channelId){
         meetingService.deleteMeetingsByChannelId(channelId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/private/team/{teamId}")
+    public ResponseEntity<Void> deleteByTeamId(
+            @PathVariable("teamId") String teamId){
+        meetingService.deleteMeetingsByTeamId(teamId);
         return ResponseEntity.ok().build();
     }
 }

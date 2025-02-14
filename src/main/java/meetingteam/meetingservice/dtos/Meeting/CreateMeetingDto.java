@@ -1,7 +1,6 @@
 package meetingteam.meetingservice.dtos.Meeting;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -18,9 +17,6 @@ public class CreateMeetingDto {
 
     @NotBlank
     private String channelId;
-
-    @NotNull
-    private Boolean isNotify;
 
     private LocalTime scheduledTime;
 
