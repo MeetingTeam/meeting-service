@@ -1,16 +1,18 @@
 FROM openjdk:17-jdk-alpine
 
-## Change directory
+# Change directory
 WORKDIR /app
 
-## Create non-root user
+# Copy war file
+COPY target/meeting-service-0.0.1-SNAPSHOT.war meeting-service.war
+
+# Create non-root user
 RUN adduser -D meeting_service
 RUN chown -R meeting_service:meeting_service /app
 USER meeting_service
 
-## Copy war file and run app
-COPY target/meeting-service-0.0.1-SNAPSHOT.war meeting-service.war
-ENTRYPOINT ["java","-jar","meeting-service.war"]
+# Run app
+ENTRYPOINT ["sh","-c","java -jar -Dspring.config.location=${CONFIG_PATH} meeting-service.war"]
 
-## Expose port 8082
-EXPOSE 8082
+# Expose port 8083
+EXPOSE 8083
