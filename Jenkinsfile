@@ -1,5 +1,5 @@
 def baseRepoUrl = 'https://github.com/MeetingTeam'
-def mainBranch = 'feature/cicd'
+def mainBranch = 'main'
 def testBranch = 'test'
 
 def appRepoName = 'meeting-service'
@@ -12,12 +12,10 @@ def helmValueFile = "values.yaml"
 def dockerhubAccount = 'dockerhub'
 def githubAccount = 'github'
 
-def dockerImageName = 'hungtran679/mt_chat-service'
+def dockerImageName = 'hungtran679/mt_meeting-service'
 def dockerfilePath = '.'
 
-def kanikoCacheImage = 'hungtran679/mt_kaniko_cache'
 def sonarCloudOrganization = 'meetingteam'
-
 
 def version = "v2.${BUILD_NUMBER}"
 
@@ -33,7 +31,7 @@ pipeline{
           }
           
           stages{
-                      stage('unit test stage'){
+                      stage('Unit test stage'){
                               steps{
                                         container('maven'){
                                                   withCredentials([
@@ -59,7 +57,7 @@ pipeline{
                                         }
                               }
                     }
-                    stage('build jar file'){
+                    stage('Build jar file'){
                               steps{
                                         container('maven'){
                                                    withCredentials([
@@ -74,7 +72,7 @@ pipeline{
                                         }
                               }
                     }
-                    stage('code analysis'){
+                    stage('Code analysis'){
                               steps{
                                         container('maven'){
                                                   withSonarQubeEnv('SonarCloud') {
@@ -83,14 +81,14 @@ pipeline{
                                         }
                               }
                     }
-                    stage('Quality Gate Check') {
+                    stage('Quality gate check') {
                               steps {
                                         timeout(time: 5, unit: 'MINUTES') {
                                                   waitForQualityGate(abortPipeline: true)
                                         }
                               }
                     }
-                    stage('build and push docker image'){
+                    stage('Build and push docker image'){
                               when{ branch mainBranch }
                               steps{
                                         container('kaniko'){
@@ -112,16 +110,16 @@ pipeline{
                                         }
                               }
                     }
-                    stage('scan built image'){
+                    stage('Scan built image'){
                               when{ branch mainBranch }
                               steps{
                                         container('trivy'){
-                                                  sh "trivy image --timeout 15m \${DOCKER_REGISTRY}/${dockerImageName}:${version}"
+                                                  sh "trivy image --timeout 15m --scanners vuln \${DOCKER_REGISTRY}/${dockerImageName}:${version}"
                                                   //sh "trivy image --timeout 15m --severity HIGH,CRITICAL --exit-code 1 \${DOCKER_REGISTRY}/${dockerImageName}:${version}"
                                         }
                               }
                     }
-                    stage('update k8s repo'){
+                    stage('Update k8s repo'){
                               when{ branch mainBranch }
                               steps {
 				withCredentials([
@@ -139,7 +137,7 @@ pipeline{
                                                             git config --global user.email "jenkins@gmail.com"
                                                             git config --global user.name "Jenkins"
                                                             git add .
-                                                            git commit -m "feat: update to version ${version}"
+                                                            git commit -m "feat: update application image of helm chart '${appRepoName}' to version ${version}"
                                                             git push origin ${testBranch}
                                                   """		
 				}				
