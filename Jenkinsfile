@@ -140,7 +140,7 @@ pipeline{
                                                             git commit -m "feat: update application image of helm chart '${appRepoName}' to version ${version}"
                                                             git push origin ${testBranch}
                                                   """		
-				}				
+				        }				
                               }
                     }
           }
