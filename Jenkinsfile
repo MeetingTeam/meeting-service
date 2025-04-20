@@ -7,15 +7,12 @@ def appVersion = "1.0"
 
 def k8SRepoName = 'k8s-repo'
 def helmPath = "${k8SRepoName}/application/${appRepoName}"
-def helmValueFile = "values.yaml"
+def helmValueFile = "values.dev.yaml"
 
-def dockerhubAccount = 'dockerhub'
 def githubAccount = 'github'
 def kanikoAccount = 'kaniko'
 
 def imageVersion = "${appVersion}-${BUILD_NUMBER}"
-
-def sonarCloudOrganization = 'meetingteam'
 
 def trivyReportFile = 'trivy_report.html'
 
@@ -79,8 +76,8 @@ pipeline{
                     stage('Code analysis'){
                               steps{
                                         container('maven'){
-                                                  withSonarQubeEnv('SonarCloud') {
-                                                            sh "mvn sonar:sonar -Dsonar.organization=${sonarCloudOrganization}"
+                                                  withSonarQubeEnv('SonarServer') {
+                                                            sh "mvn sonar:sonar -Dsonar.projectKey=${appRepoName}"
                                                   }
                                         }
                               }
@@ -148,7 +145,7 @@ pipeline{
                                                   sh """
                                                             git clone https://\${GIT_USER}:\${GIT_PASS}@github.com/MeetingTeam/${k8SRepoName}.git --branch ${mainBranch}
                                                             cd ${helmPath}
-                                                            sed -i 's|  tag: .*|  tag: "${imageVersion}"|' ${helmValueFile}
+                                                            sed -i "/imageTag:/s/:.*/: ${imageVersion}/" ${helmValueFile}
 
                                                             git config --global user.email "jenkins@gmail.com"
                                                             git config --global user.name "Jenkins"
