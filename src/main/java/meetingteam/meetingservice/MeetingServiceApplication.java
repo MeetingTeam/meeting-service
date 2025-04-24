@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties(ServiceUrlConfig.class)
 public class MeetingServiceApplication {
     public static void main(String[] args) {
-        // Comment some things
+        // Comment another thing
         SpringApplication.run(MeetingServiceApplication.class, args);
     }
 }
