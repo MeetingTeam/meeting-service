@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties(ServiceUrlConfig.class)
 public class MeetingServiceApplication {
+    // Statr application method
     public static void main(String[] args) {
-        // Comment another thing
         SpringApplication.run(MeetingServiceApplication.class, args);
     }
 }
