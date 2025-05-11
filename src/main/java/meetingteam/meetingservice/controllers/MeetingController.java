@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/meeting")
+@PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
 public class MeetingController {
     private final MeetingService meetingService;
@@ -61,7 +62,6 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/private/channel/{channelId}")
     public ResponseEntity<Void> deleteByChannelId(
             @PathVariable("channelId") String channelId){
@@ -69,11 +69,16 @@ public class MeetingController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/private/team/{teamId}")
     public ResponseEntity<Void> deleteByTeamId(
             @PathVariable("teamId") String teamId){
         meetingService.deleteMeetingsByTeamId(teamId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/version")
+    @PreAuthorize("isAnonymous()")
+    public ResponseEntity<String> getVersion(){
+        return ResponseEntity.ok("version 1.0");
     }
 }
