@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import meetingteam.meetingservice.dtos.Calendar.CalendarDto;
 import meetingteam.meetingservice.services.CalendarService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/calendar")
+@PreAuthorize("isAuthenticated()")
 @RequiredArgsConstructor
 public class CalendarController {
     private final CalendarService calendarService;
