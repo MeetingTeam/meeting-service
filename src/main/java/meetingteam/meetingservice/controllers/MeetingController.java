@@ -79,6 +79,6 @@ public class MeetingController {
     @GetMapping("/version")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<String> getVersion(){
-        return ResponseEntity.ok("version 1.0");
+        return ResponseEntity.ok("version 3.0");
     }
 }
