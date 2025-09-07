@@ -29,6 +29,7 @@ public class MeetingServiceImpl implements MeetingService {
     private final MeetingRepository meetingRepo;
     private final TeamService teamService;
     private final WebsocketService websocketService;
+    private final NotificationService notificationService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -50,6 +51,7 @@ public class MeetingServiceImpl implements MeetingService {
 
         var resMeetingDto= modelMapper.map(savedMeeting, ResMeetingDto.class);
         websocketService.addOrUpdateMeeting(savedMeeting.getTeamId(), resMeetingDto);
+        notificationService.notifyNewMeeting(savedMeeting);
         return resMeetingDto;
     }
 
@@ -107,6 +109,7 @@ public class MeetingServiceImpl implements MeetingService {
 
         var resMeetingDto= modelMapper.map(meeting, ResMeetingDto.class);
         websocketService.addOrUpdateMeeting(meeting.getTeamId(), resMeetingDto);
+        notificationService.notifyCanceledMeeting(meeting);
     }
 
     @Override

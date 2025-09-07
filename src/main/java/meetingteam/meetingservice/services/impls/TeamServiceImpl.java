@@ -6,11 +6,14 @@ import lombok.RequiredArgsConstructor;
 import meetingteam.commonlibrary.utils.AuthUtil;
 import meetingteam.meetingservice.configs.ServiceUrlConfig;
 import meetingteam.meetingservice.services.TeamService;
+
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +36,20 @@ public class TeamServiceImpl implements TeamService {
                 .uri(uri)
                 .retrieve()
                 .body(Boolean.class);
+    }
+
+    @Override
+    @Retry(name="restApi")
+    @CircuitBreaker(name="restCircuitBreaker")
+    public List<String> getMemberUserIdsOfTeam(String teamId) {
+        var uriBuilder= UriComponentsBuilder
+                .fromHttpUrl(serviceUrlConfig.teamServiceUrl())
+                .path("/team-member/private/"+teamId+"/member-user-ids");
+        URI uri = uriBuilder.build().toUri();
+
+        return restClient.get()
+                .uri(uri)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
     }
 }
