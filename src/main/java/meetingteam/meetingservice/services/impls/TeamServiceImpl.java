@@ -3,7 +3,6 @@ package meetingteam.meetingservice.services.impls;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
-import meetingteam.commonlibrary.utils.AuthUtil;
 import meetingteam.meetingservice.configs.ServiceUrlConfig;
 import meetingteam.meetingservice.services.TeamService;
 

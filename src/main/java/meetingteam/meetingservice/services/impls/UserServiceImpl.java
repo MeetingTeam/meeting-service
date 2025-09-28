@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService {
     private final RestClient restClient;
 
     @Override
-    @Retry(name="restApi")
-    @CircuitBreaker(name="restCircuitBreaker")
     public String getUserEmail() {
         String jwtToken= AuthUtil.getJwtToken();
 

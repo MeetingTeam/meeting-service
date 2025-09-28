@@ -1,20 +1,10 @@
 package meetingteam.meetingservice.services.impls;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import meetingteam.commonlibrary.exceptions.InternalServerException;
 import meetingteam.meetingservice.dtos.Notification.MailDto;
 import meetingteam.meetingservice.models.Meeting;
 import meetingteam.meetingservice.services.NotificationService;

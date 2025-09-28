@@ -17,7 +17,7 @@ RUN chown -R meeting_service:meeting_service /app
 USER meeting_service
 
 # Run app
-ENTRYPOINT ["sh","-c","java -javaagent:opentelemetry-javaagent.jar -jar -Dspring.config.location=${CONFIG_PATH} meeting-service.war"]
+ENTRYPOINT ["sh","-c","java -javaagent:opentelemetry-javaagent.jar -Dspring.config.location=${CONFIG_PATH} -jar meeting-service.war"]
 
 # Expose port 8083
 EXPOSE 8083
