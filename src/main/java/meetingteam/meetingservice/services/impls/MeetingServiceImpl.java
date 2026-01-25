@@ -59,6 +59,10 @@ public class MeetingServiceImpl implements MeetingService {
     public void updateMeeting(UpdateMeetingDto meetingDto) {
         var meeting= meetingRepo.findById(meetingDto.getId()).orElseThrow(()->new BadRequestException("Meeting not found"));
 
+        String userId= AuthUtil.getUserId();
+        if(!teamService.isMemberOfTeam(userId, meeting.getTeamId(),meeting.getChannelId()))
+            throw new AccessDeniedException("You don't have the permission to update meeting to this channel");
+
         if(meetingDto.getTitle()!=null) meeting.setTitle(meetingDto.getTitle());
         if(meetingDto.getStartDate()!=null) meeting.setStartDate(meetingDto.getStartDate());
         if(meetingDto.getEndDate()!=null) meeting.setEndDate(meetingDto.getEndDate());
@@ -74,6 +78,10 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void reactMeeting(String meetingId, String emojiCode) {
         var meeting=meetingRepo.findById(meetingId).orElseThrow(()->new BadRequestException("MeetingId "+meetingId+" does not exists"));
+
+        String userId= AuthUtil.getUserId();
+        if(!teamService.isMemberOfTeam(userId, meeting.getTeamId(),meeting.getChannelId()))
+            throw new AccessDeniedException("You don't have the permission to react meeting to this channel");
 
         Reaction reaction= new Reaction(AuthUtil.getUserId(), emojiCode);
         var reactions=meeting.getReactions();
@@ -99,6 +107,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void cancelMeeting(String meetingId, boolean isCanceled) {
         String userId= AuthUtil.getUserId();
+
         var meeting=meetingRepo.findById(meetingId).orElseThrow(()->new BadRequestException("MeetingId "+meetingId+" does not exists"));
         if(!userId.equals(meeting.getCreatorId()))
             throw new AccessDeniedException("You do not have permission to update this meeting");

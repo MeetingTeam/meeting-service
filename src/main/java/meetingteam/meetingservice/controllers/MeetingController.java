@@ -9,6 +9,7 @@ import meetingteam.meetingservice.services.MeetingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -18,6 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MeetingController {
     private final MeetingService meetingService;
+
+    @Value("${simulation.enable-app-bug:false}")
+    private boolean enableAppBug;
 
     @PostMapping
     public ResponseEntity<ResMeetingDto> createMeeting(
@@ -36,6 +40,9 @@ public class MeetingController {
     public ResponseEntity<Void> reactMeeting(
             @PathVariable("meetingId") String meetingId,
             @RequestParam(value = "emojiCode", required = false) String emojiCode){
+        if (enableAppBug){
+            throw new RuntimeException("Test application bug");
+        }
         meetingService.reactMeeting(meetingId, emojiCode);
         return ResponseEntity.ok().build();
     }
